@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Manager Dashboard{% endblock %}
+{% block content %}
+{% include "includes/_welcome.html" with blurb="Cooperative manager: manage records and staff accounts, review reports and set price rates." %}
+
+<h2 class="h5 mb-3">Staff accounts</h2>
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg"><div class="card stat-card"><div class="card-body"><div class="stat-num">{{ counts.total }}</div><div class="text-muted small">Total accounts</div></div></div></div>
+  <div class="col-6 col-lg"><div class="card stat-card"><div class="card-body"><div class="stat-num">{{ counts.recorders }}</div><div class="text-muted small">Recorders</div></div></div></div>
+  <div class="col-6 col-lg"><div class="card stat-card"><div class="card-body"><div class="stat-num">{{ counts.cashiers }}</div><div class="text-muted small">Cashiers</div></div></div></div>
+  <div class="col-6 col-lg"><div class="card stat-card"><div class="card-body"><div class="stat-num">{{ counts.managers }}</div><div class="text-muted small">Managers</div></div></div></div>
+  <div class="col-12 col-lg"><div class="card stat-card"><div class="card-body"><div class="stat-num">{{ counts.inactive }}</div><div class="text-muted small">Deactivated</div></div></div></div>
+</div>
+
+<div class="card mb-4">
+  <div class="card-header d-flex justify-content-between align-items-center bg-white">
+    <strong>Newest accounts</strong>
+    <a class="btn btn-sm btn-cl" href="{% url 'accounts:user_list' %}"><i class="bi bi-people me-1"></i>Manage users</a>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light"><tr><th>Name</th><th>Username</th><th>Role</th><th>Joined</th></tr></thead>
+      <tbody>
+      {% for u in recent_users %}
+        <tr>
+          <td>{% include "includes/_avatar.html" with person=u size="sm" %} <span class="ms-1">{{ u.display_name }}</span></td>
+          <td>{{ u.username }}</td>
+          <td><span class="badge role-badge role-{{ u.role|lower }}">{{ u.role }}</span></td>
+          <td>{{ u.date_joined|date:"M d, Y" }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<h2 class="h5 mb-3">Cooperative management</h2>
+<div class="row g-3">
+  {% include "includes/_module_card.html" with icon="bi-person-badge" title="Fishers & boats" text="Maintain member fisher and boat records." %}
+  {% include "includes/_module_card.html" with icon="bi-tags" title="Species & price rates" text="Set the price per kilogram by species and grade." %}
+  {% include "includes/_module_card.html" with icon="bi-shop" title="Buyers" text="Manage buyer records and credit limits." %}
+  {% include "includes/_module_card.html" with icon="bi-bar-chart-line" title="Reports" text="Landing summaries, earnings statements, buyer balances, species volume." %}
+  {% include "includes/_module_card.html" with icon="bi-journal-check" title="Audit log" text="Review every correction made to deliveries and payouts." %}
+</div>
+{% endblock %}

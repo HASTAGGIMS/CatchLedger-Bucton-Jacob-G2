@@ -24,6 +24,14 @@ class BootstrapFormMixin:
         super().__init__(*args, **kwargs)
         self._style_fields()
 
+    def full_clean(self):
+        super().full_clean()
+        if self.is_bound:  # red outline on fields that have errors
+            for name in self.errors:
+                if name in self.fields:
+                    widget = self.fields[name].widget
+                    widget.attrs["class"] = widget.attrs.get("class", "") + " is-invalid"
+
 
 class RegistrationForm(BootstrapFormMixin, UserCreationForm):
     # Managers are never self-registered; a Manager assigns that role later (BR-03).

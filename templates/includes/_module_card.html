@@ -1,0 +1,10 @@
+{# Usage: {% include "includes/_module_card.html" with icon="bi-box-seam" title="..." text="..." %} #}
+<div class="col-md-6 col-lg-4">
+  <div class="card module-card h-100">
+    <div class="card-body">
+      <div class="module-icon"><i class="bi {{ icon }}"></i></div>
+      <h2 class="h6 mt-2">{{ title }} <span class="badge text-bg-light border">Coming soon</span></h2>
+      <p class="small text-muted mb-0">{{ text }}</p>
+    </div>
+  </div>
+</div>

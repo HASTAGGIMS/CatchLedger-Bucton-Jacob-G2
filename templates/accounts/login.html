@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Log in{% endblock %}
+{% block body_class %}auth-page{% endblock %}
+{% block main_class %}auth-wrap{% endblock %}
+{% block content %}
+<div class="auth-card card shadow-lg border-0">
+  <div class="auth-brand text-center">
+    <i class="bi bi-water"></i>
+    <h1 class="h3 fw-bold mb-0">CatchLedger</h1>
+    <p class="mb-0 opacity-75">Catch recording &amp; sales management</p>
+  </div>
+  <div class="card-body p-4">
+    <h2 class="h5 mb-3">Log in to your account</h2>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger py-2" role="alert">{% for e in form.non_field_errors %}{{ e }}{% endfor %}</div>
+      {% endif %}
+      {% include "includes/_field.html" with field=form.username %}
+      {% include "includes/_field.html" with field=form.password %}
+      <input type="hidden" name="next" value="{{ next }}">
+      <button type="submit" class="btn btn-cl w-100 py-2">Log in</button>
+    </form>
+    <p class="text-center text-muted mt-3 mb-0">New staff member? <a href="{% url 'accounts:register' %}">Create an account</a></p>
+  </div>
+</div>
+{% endblock %}

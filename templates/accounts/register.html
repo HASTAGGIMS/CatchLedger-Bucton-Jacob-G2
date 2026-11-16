@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Create an account{% endblock %}
+{% block body_class %}auth-page{% endblock %}
+{% block main_class %}auth-wrap auth-wrap-wide{% endblock %}
+{% block content %}
+<div class="auth-card card shadow-lg border-0">
+  <div class="auth-brand text-center">
+    <i class="bi bi-water"></i>
+    <h1 class="h3 fw-bold mb-0">CatchLedger</h1>
+    <p class="mb-0 opacity-75">Create your staff account</p>
+  </div>
+  <div class="card-body p-4">
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger py-2" role="alert">{% for e in form.non_field_errors %}{{ e }}{% endfor %}</div>
+      {% endif %}
+      <div class="row">
+        <div class="col-md-6">{% include "includes/_field.html" with field=form.first_name %}</div>
+        <div class="col-md-6">{% include "includes/_field.html" with field=form.last_name %}</div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">{% include "includes/_field.html" with field=form.username %}</div>
+        <div class="col-md-6">{% include "includes/_field.html" with field=form.email %}</div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">{% include "includes/_field.html" with field=form.contact_number %}</div>
+        <div class="col-md-6">{% include "includes/_field.html" with field=form.role %}</div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">{% include "includes/_field.html" with field=form.password1 %}</div>
+        <div class="col-md-6">{% include "includes/_field.html" with field=form.password2 %}</div>
+      </div>
+      <p class="small text-muted">The Manager role cannot be chosen here. A Manager assigns it to authorized staff.</p>
+      <button type="submit" class="btn btn-cl w-100 py-2">Create account</button>
+    </form>
+    <p class="text-center text-muted mt-3 mb-0">Already registered? <a href="{% url 'accounts:login' %}">Log in</a></p>
+  </div>
+</div>
+{% endblock %}

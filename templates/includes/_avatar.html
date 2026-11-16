@@ -1,0 +1,6 @@
+{# Usage: {% include "includes/_avatar.html" with person=user size="sm|lg" %} #}
+{% if person.profile_photo %}
+  <img src="{{ person.profile_photo.url }}" alt="{{ person.display_name }}" class="avatar avatar-{{ size|default:'sm' }}">
+{% else %}
+  <span class="avatar avatar-{{ size|default:'sm' }} avatar-initials">{{ person.display_name|slice:":1"|upper }}</span>
+{% endif %}
