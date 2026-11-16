@@ -78,7 +78,7 @@ CREATE DATABASE catchledger OWNER catchledger;
 Supabase is PostgreSQL. In the dashboard open *Project Settings -> Database -> Connection string (URI)* and put it in `.env`:
 
 ```
-DATABASE_URL=postgresql://postgres.<project-ref>:<password>@aws-0-<region>.pooler.supabase.com:6543/postgres
+DATABASE_URL=postgresql://postgres.<project-ref>:<password>@aws-0-<region>.pooler.supabase.com:5432/postgres
 DATABASE_SSLMODE=require
 ```
 
