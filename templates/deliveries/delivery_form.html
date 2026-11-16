@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}{% if mode == "edit" %}Edit Delivery{% else %}Record Delivery{% endif %}{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">
+  {% if mode == "edit" %}
+    <i class="bi bi-pencil-square me-2"></i>Edit Delivery {{ delivery.delivery_no }}
+  {% else %}
+    <i class="bi bi-plus-lg me-2"></i>Record Delivery
+  {% endif %}
+</h1>
+
+{% if formset.non_form_errors %}
+  <div class="alert alert-danger">{{ formset.non_form_errors }}</div>
+{% endif %}
+
+<form method="post" novalidate>
+  {% csrf_token %}
+  <div class="card mb-3">
+    <div class="card-body">
+      <h2 class="h6 text-uppercase text-muted mb-3">Delivery Details</h2>
+      <div class="row">
+        <div class="col-md-6">{% include "includes/_field.html" with field=form.fisher %}</div>
+        <div class="col-md-6">{% include "includes/_field.html" with field=form.boat %}</div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">{% include "includes/_field.html" with field=form.landed_at %}</div>
+      </div>
+      {% include "includes/_field.html" with field=form.remarks %}
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-body">
+      <h2 class="h6 text-uppercase text-muted mb-3">Catch Items</h2>
+      {{ formset.management_form }}
+      <div id="item-rows">
+        {% for item_form in formset %}
+          <div class="row align-items-start border-bottom py-2 item-row">
+            {% for hidden in item_form.hidden_fields %}{{ hidden }}{% endfor %}
+            <div class="col-md-4">{% include "includes/_field.html" with field=item_form.species %}</div>
+            <div class="col-md-2">{% include "includes/_field.html" with field=item_form.grade %}</div>
+            <div class="col-md-3">{% include "includes/_field.html" with field=item_form.weight_kg %}</div>
+            {% if item_form.DELETE %}
+              <div class="col-md-2 pt-4">
+                <div class="form-check">
+                  {{ item_form.DELETE }}
+                  <label class="form-check-label" for="{{ item_form.DELETE.id_for_label }}">Remove</label>
+                </div>
+              </div>
+            {% endif %}
+            {% for error in item_form.non_field_errors %}<div class="col-12"><div class="alert alert-danger py-1 px-2 mb-2">{{ error }}</div></div>{% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+      <p class="text-muted small mb-0">Price per kg is looked up automatically from the price rate effective on the landing date.</p>
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>Save Delivery</button>
+  <a href="{% url 'deliveries:delivery_list' %}" class="btn btn-outline-secondary">Cancel</a>
+</form>
+{% endblock %}

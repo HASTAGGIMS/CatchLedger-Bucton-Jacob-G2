@@ -11,13 +11,21 @@
         </li>
 
         {% if user.is_recorder %}
-          <li class="nav-item"><span class="nav-link disabled" title="Coming in a later phase"><i class="bi bi-box-seam me-1"></i>Deliveries <span class="badge text-bg-secondary">soon</span></span></li>
+          <li class="nav-item">
+            <a class="nav-link {% if 'deliveries' in request.resolver_match.app_names %}active{% endif %}" href="{% url 'deliveries:delivery_list' %}"><i class="bi bi-box-seam me-1"></i>Deliveries</a>
+          </li>
           <li class="nav-item"><span class="nav-link disabled" title="Coming in a later phase"><i class="bi bi-clipboard-data me-1"></i>Daily Landing Summary <span class="badge text-bg-secondary">soon</span></span></li>
         {% elif user.is_cashier %}
+          <li class="nav-item">
+            <a class="nav-link {% if 'deliveries' in request.resolver_match.app_names %}active{% endif %}" href="{% url 'deliveries:delivery_list' %}"><i class="bi bi-box-seam me-1"></i>Deliveries</a>
+          </li>
           <li class="nav-item"><span class="nav-link disabled" title="Coming in a later phase"><i class="bi bi-receipt me-1"></i>Sales <span class="badge text-bg-secondary">soon</span></span></li>
           <li class="nav-item"><span class="nav-link disabled" title="Coming in a later phase"><i class="bi bi-cash-coin me-1"></i>Payments <span class="badge text-bg-secondary">soon</span></span></li>
           <li class="nav-item"><span class="nav-link disabled" title="Coming in a later phase"><i class="bi bi-wallet2 me-1"></i>Payouts <span class="badge text-bg-secondary">soon</span></span></li>
         {% elif user.is_manager %}
+          <li class="nav-item">
+            <a class="nav-link {% if 'deliveries' in request.resolver_match.app_names %}active{% endif %}" href="{% url 'deliveries:delivery_list' %}"><i class="bi bi-box-seam me-1"></i>Deliveries</a>
+          </li>
           <li class="nav-item">
             <a class="nav-link {% if request.resolver_match.url_name == 'user_list' or request.resolver_match.url_name == 'user_edit' %}active{% endif %}" href="{% url 'accounts:user_list' %}"><i class="bi bi-people me-1"></i>Users</a>
           </li>
