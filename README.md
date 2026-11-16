@@ -3,7 +3,36 @@
 **A Catch Recording and Sales Management System for a Fishermen's Cooperative**
 
 Full-stack Django (templates + Bootstrap 5) with PostgreSQL / Supabase.
-This repository currently contains **Phase 1: the Account feature**, which every later module depends on.
+This repository contains **Phase 1: the Account feature** and **Phase 2: Catch Delivery Recording**, the system's core feature.
+
+## Phase 2 - Core Feature: Catch Delivery Recording
+
+Every landing is logged once, as a **Delivery** (fisher, boat, date/time) with one or more **DeliveryItem** lines
+(species, grade, weight). The price per kilogram is looked up automatically from the price rate in effect on the
+landing date and copied onto the item, so later price changes never alter past records (SDD BR-15, BR-16).
+
+| Requirement | Where |
+|---|---|
+| Models with real relationships (Fisher, Boat, Species, PriceRate, Delivery, DeliveryItem, AuditLog) | `deliveries/models.py` |
+| Create a delivery with one or more items, through the UI | `/deliveries/new/` - Recorder or Manager only (BR-06) |
+| Read / search deliveries | `/deliveries/` - all three roles can view (filter by fisher name and date range) |
+| Update a delivery | `/deliveries/<id>/edit/` - Recorder same calendar day only, Manager any time (BR-07) |
+| Delete (as Void, never hard-deleted) | `/deliveries/<id>/void/` - Manager only, reason required, kept for audit (BR-25) |
+| Validation | No future landing date (BR-18); weight 0-5,000 kg (BR-19); no duplicate species+grade in one delivery (BR-20); a price rate must exist for the species/grade/date or the item is rejected (BR-15) |
+| Tied to Account feature | Every delivery stores `recorded_by` (FK to User); only logged-in Recorders/Managers can create one |
+| Role-based access | Enforced with the same `@role_required` decorator from Phase 1; Cashiers can view but not create/edit |
+| Auto-generated delivery number | `DLV-YYYYMMDD-NNN`, unique, never reused (BR-21) |
+| Audit trail | Create/Update/Void actions on a delivery are written to `AuditLog` (BR-50) |
+
+Master data (Fisher, Boat, Species, PriceRate) can be entered and maintained at `/admin/` for now; a dedicated
+Manager-facing UI for these is planned for the next increment (see completion report, Remaining Tasks).
+
+To try it with sample data:
+
+```bash
+python manage.py seed_demo_users    # demo_manager / demo_cashier / demo_recorder
+python manage.py seed_catch_data    # sample fishers, boats, species and price rates
+```
 
 ## Phase 1 - Account feature
 
@@ -87,10 +116,13 @@ The project **refuses to start without `DATABASE_URL`** and rejects non-PostgreS
 ## Tests
 
 ```bash
-python manage.py test accounts
+python manage.py test accounts deliveries
 ```
 
-42 tests cover registration validation, password hashing, login/logout, protected pages, role isolation, user management and the profile (including photo upload). They run against PostgreSQL; the database user needs the `CREATEDB` privilege so Django can create `test_<name>`.
+42 `accounts` tests cover registration validation, password hashing, login/logout, protected pages, role isolation,
+user management and the profile (including photo upload). 9 `deliveries` tests cover role-gated create/edit/void,
+future-date rejection, over-weight rejection, missing price rate rejection, and same-day edit restriction. They run
+against PostgreSQL; the database user needs the `CREATEDB` privilege so Django can create `test_<name>`.
 
 ## Project structure
 
@@ -98,7 +130,9 @@ python manage.py test accounts
 config/                 Django settings (env-driven), root URLs
 accounts/               Account feature: User model, forms, views, tests
   management/commands/  seed_demo_users
-templates/              base layout, partials, account pages, 403 page
+deliveries/              Core feature: Fisher, Boat, Species, PriceRate, Delivery, DeliveryItem, AuditLog
+  management/commands/  seed_catch_data
+templates/              base layout, partials, account pages, delivery pages, 403 page
 static/css/             Theme (navy/teal)
 requirements.txt        Pinned dependencies
 .env.example            Template for secrets (copy to .env; .env is git-ignored)
