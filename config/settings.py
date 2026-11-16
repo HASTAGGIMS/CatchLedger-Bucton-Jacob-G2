@@ -118,3 +118,8 @@ MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# ---------------------------------------------------------------- messages (Bootstrap alert classes)
+from django.contrib.messages import constants as message_constants  # noqa: E402
+
+MESSAGE_TAGS = {message_constants.ERROR: "danger"}
